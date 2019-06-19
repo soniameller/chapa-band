@@ -1,0 +1,11 @@
+* {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+canvas {
+  display: block;
+  /* border: 1px solid black; */
+  max-height: 95vh;
+  max-width: 95vw;
+  margin: auto;
+}
