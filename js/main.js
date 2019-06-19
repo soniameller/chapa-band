@@ -10,32 +10,38 @@
 [X] Draw and open rule sheet 
 [X] Play buttons move in the click event
 [X] Actualize score when hitting the correct place
+[X] If it is correct add 10, if it is wrong = -20
+[X] Change notes to ✨ if the hit is correct
+[X] Change song speed by levels
 
 --------------------------TODO------------------------------
 IMPORTANT
+[X] What happens at the end of the song?
+[X] Exit the end of the song without timeout 
+[X] Print out the achievements in the end of the game
 
 NOT SO IMPORTANT
-[ ] score -=1 if the note goes by without pressing
+
 [ ] If I hit twice befor the song starts, everything gets inverted
 [ ] How to clean code: Take everything that could be outside
 [ ] Check why I can zoom in the canvas while I used the vh and vw units in CSS
+
 [ ] Check fonts available in web (doesnt read my font online)
 [ ] Full screen
 [ ] Complete song!
 [ ] The first hit doesnt draw the hit lines
 [ ] Check that the way to make the drawing when the instrument is hit is repeted in the event listeners and in the click events
+[ ] Change hi-hat sound. I dont like it 🤮
 
 BONUS
 [ ] Change letters to real symbol in the drum sheet
 [ ] Missing intersection with the circle
 [ ] Use more keys to play the instruments
-[ ] Change hi-hat sound. I dont like it 🤮
 [ ] Draw and move audience on rocks
-[ ] Change notes to ✨ if the hit is correct
 [ ] Make it work mobile
 [ ] More songs!
-[ ] If it is correct add 10, if it is wrong = -1
 [ ] Load Maximun score over amout of notes played!
+[ ] score -=1 if the note goes by without pressing
 */
 
 const canvas = document.querySelector("canvas");
@@ -43,10 +49,12 @@ const ctx = canvas.getContext("2d");
 
 /*-------------------------- VARIABLES ------------------------------*/
 // Constants
+const DEBUG = false;
+// const DEBUG = true;
+
 const CANVAS_WIDTH = canvas.width;
 const CANVAS_HEIGHT = canvas.height;
 const SPEED = 0.6; // 🤔 What is this doing?
-const DEBUG = false;
 
 const S_DIM = { x: 580, y: 430, width: 200, height: 160 };
 const xH_DIM = { x: 370, y: 350, width: 280, height: 80 };
@@ -54,26 +62,30 @@ const CC_DIM = { x: 1020, y: 380, width: 260, height: 100 };
 const BD_DIM = { x: 925, y: 590, radio: 140 };
 
 const PLAY_DIM = { x: 35, y: 200, width: 110, height: 70 };
-const RULES_DIM = { x: 180, y: 200, width: 95, height: 50 };
 const RESET_DIM = { x: 35, y: 280, width: 95, height: 50 };
+const RULES_DIM = { x: 210, y: 200, width: 95, height: 50 };
+const LEVEL_DIM = { x: 330, y: 200, width: 95, height: 50 };
+
 
 // Global variables
-let frame = 0; 
+let frame = 0;
 let bg = new Background();
 let song = new Song(0); //create atributes --> new Song (Track Id, speed?level)
-let score = 0; 
+let score = 0;
 let playPause = false;
 let BDhit = false;
 let Shit = false;
 let xHhit = false;
 let CChit = false;
 let rules = false;
+let level = 0;  //CHANGE TO TRUE TO MAKE IT APPEAR
+let star = false;
 
 // Sounds
-let BDsound = new Sound("/audio/Sounds/BD.wav");
-let Ssound = new Sound("/audio/Sounds/S.wav");
-let xHsound = new Sound("/audio/Sounds/xH.wav");
-let CCsound = new Sound("/audio/Sounds/CC.wav");
+let BDsound = new Sound("audio/Sounds/BD.wav");
+let Ssound = new Sound("audio/Sounds/S.wav");
+let xHsound = new Sound("audio/Sounds/xH.wav");
+let CCsound = new Sound("audio/Sounds/CC.wav");
 
 /*-------------------------- ANIMATION ------------------------------*/
 function animation() {
@@ -87,28 +99,32 @@ animation();
 // It shouldn't modify any variable
 function drawEverything(ctx) {
   ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
   bg.draw(ctx);
 
   song.draw(ctx);
 
   drawScore(ctx);
 
+  drawRules(ctx);
   drawBD(ctx);
   drawCC(ctx);
   drawxH(ctx);
   drawS(ctx);
   drawPlay(ctx);
-  drawRules(ctx);
   drawReset(ctx);
+  drawLevels(ctx);
 }
 
 /*-------------------------- UPDATE EVERYTHING ------------------------------*/
 // It shouldn't draw on the canvas
 function updateEverything() {
   frame++;
+  song.update();
 }
 
 /*-------------------------- DRAWING ------------------------------*/
+
 
 //---SCORE DRAW---
 function drawScore(ctx) {
@@ -247,7 +263,24 @@ function drawRules(ctx) {
 
   if (rules) {
     let img = new Image();
-    img.src = "../img/Rules.png";
+    img.src = "img/Rules.png";
+    ctx.drawImage(img, 0, 0);
+  }
+}
+
+//---LEVEL---
+function drawLevels(ctx) {
+  if (DEBUG) {
+    ctx.save();
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = "red";
+    ctx.strokeRect(LEVEL_DIM.x, LEVEL_DIM.y, LEVEL_DIM.width, LEVEL_DIM.height);
+    ctx.restore();
+  }
+
+  if (level) {
+    let img = new Image();
+    img.src = "/img/Levels.png";
     ctx.drawImage(img, 0, 0);
   }
 }
@@ -255,7 +288,7 @@ function drawRules(ctx) {
 /*-------------------------- KEY EVENTS ------------------------------*/
 // Listen for key events
 document.onkeydown = event => {
-  // console.log(event.keyCode);
+  console.log(event.keyCode);
 
   if (event.keyCode === 32) {
     BDhit = !BDhit;
@@ -265,7 +298,11 @@ document.onkeydown = event => {
     song.hit("BD");
   }
 
-  if (event.keyCode === 68 || event.keyCode === 70 || event.keyCode === 67) {
+  if (event.keyCode === 68 || 
+      event.keyCode === 70 || 
+      event.keyCode === 67 ||
+      event.keyCode === 71 
+      ){
     Shit = !Shit;
     //Play sound
     Ssound.play();
@@ -304,8 +341,14 @@ document.onkeydown = event => {
     }
   }
 
-  if (event.keyCode === 27 && rules) rules=!rules
+  //OPEN RULES
+  if (event.keyCode === 27 && rules) rules = !rules;
 
+  //CHOOSE LEVELS
+  if (event.keyCode === 49 && level) song.speed = 0.3;
+  if (event.keyCode === 50 && level) song.speed = 0.6;
+  if (event.keyCode === 51 && level) song.speed = 1;
+  level = false;
 };
 
 /*-------------------------- CLICK EVENTS ------------------------------*/
@@ -332,7 +375,7 @@ canvas.onclick = e => {
     possitionY <= S_DIM.y + S_DIM.height
   ) {
     console.log("Snare hit!");
-    mySound = new Sound("/audio/Sounds/S.wav");
+    mySound = new Sound("audio/Sounds/S.wav");
     mySound.play();
     Shit = !Shit;
   }
@@ -344,7 +387,7 @@ canvas.onclick = e => {
     possitionY <= xH_DIM.y + xH_DIM.height
   ) {
     console.log("Hi-Hat hit!");
-    mySound = new Sound("/audio/Sounds/xH.wav");
+    mySound = new Sound("audio/Sounds/xH.wav");
     mySound.play();
     xHhit = !xHhit;
   }
@@ -404,6 +447,16 @@ canvas.onclick = e => {
   ) {
     console.log("Reset!");
     location.reload();
+  }
+  if (
+    LEVEL_DIM.x <= possitionX &&
+    possitionX <= LEVEL_DIM.x + LEVEL_DIM.width &&
+    LEVEL_DIM.y <= possitionY &&
+    possitionY <= LEVEL_DIM.y + LEVEL_DIM.height
+  ) {
+    level = 3
+    console.log("Level!");
+    // drawLevels();
   }
 };
 

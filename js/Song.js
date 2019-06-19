@@ -1,5 +1,5 @@
 class Song {
-  constructor(trackId, speed = 0.5) {
+  constructor(trackId, speed = 1) {
     this.notes = songs[trackId].notes;
     this.startTime = undefined;
     this.pauseTime = undefined;
@@ -9,6 +9,7 @@ class Song {
     this.track.playbackRate = speed;
     this.timeToPlay = true;
     this.notesToPress = [];
+    this.feedbacks = [];
   }
 
   draw(ctx) {
@@ -25,6 +26,7 @@ class Song {
       time = this.speed * (this.pauseTime - this.startTime);
     }
 
+    //------DRAW NOTES-------
     // console.log(time);
     this.timeToPlay = false;
     this.notesToPress = [];
@@ -50,7 +52,42 @@ class Song {
         ctx.fillText(notes[i], SPEED * (noteTime - time) + 154, y);
       }
     }
+
+    // ------DRAW FEEDBACKS-----
+    for (let i = 0; i < this.feedbacks.length; i++) {
+      let x = 153;
+      let y = this.feedbacks[i].y;
+      let radius = 20;
+      ctx.globalAlpha = 0.5;
+      ctx.fillStyle = this.feedbacks[i].color;
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, 2 * Math.PI);
+      ctx.fill();
+    }
+
+    // ----- DRAW END OF GAME------
+
+    if (this.track.currentTime === this.track.duration ) {
+      let img = new Image();
+      img.src = "/img/endOfSong.png";
+      ctx.drawImage(img, 0, 0);
+
+      setTimeout(() => {
+        location.reload();
+      }, 15000);
+    }
+
     ctx.restore();
+  }
+
+
+  update() {
+    for (let i = 0; i < this.feedbacks.length; i++) {
+      this.feedbacks[i].ttl--;
+      if (this.feedbacks[i].ttl === 0) {
+        this.feedbacks.splice(i, 1);
+      }
+    }
   }
   play() {
     this.startTime = Date.now();
@@ -60,6 +97,7 @@ class Song {
     }
 
     setTimeout(() => {
+      this.track.playbackRate = this.speed;
       this.track.play();
     }, 2000 / this.speed);
   }
@@ -75,9 +113,28 @@ class Song {
     }
   }
   hit(note) {
+    let feedbackColor;
+    let feedbackY;
+
     if (this.track.currentTime !== 0) {
-      if (this.notesToPress.toString().includes(note) === true)score += 10;
-      if (this.notesToPress.toString().includes(note) === false) score -= 20;
+      if (this.notesToPress.toString().includes(note)) {
+        score += 10;
+        feedbackColor = "green";
+      } else {
+        score -= 20;
+        feedbackColor = "red";
+      }
     }
+
+    if (note === "xH") feedbackY = 30;
+    else if (note === "S") feedbackY = 50;
+    else if (note === "CC") feedbackY = 70;
+    else feedbackY = 120;
+
+    this.feedbacks.push({
+      y: feedbackY,
+      ttl: 10,
+      color: feedbackColor
+    });
   }
 }
