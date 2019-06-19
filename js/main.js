@@ -27,6 +27,7 @@ NOT SO IMPORTANT
 [ ] Check why I can zoom in the canvas while I used the vh and vw units in CSS
 
 [ ] Check fonts available in web (doesnt read my font online)
+[ ] Change rule image
 [ ] Full screen
 [ ] Complete song!
 [ ] The first hit doesnt draw the hit lines
@@ -65,6 +66,8 @@ const PLAY_DIM = { x: 35, y: 200, width: 110, height: 70 };
 const RESET_DIM = { x: 35, y: 280, width: 95, height: 50 };
 const RULES_DIM = { x: 210, y: 200, width: 95, height: 50 };
 const LEVEL_DIM = { x: 330, y: 200, width: 95, height: 50 };
+const END_DIM = { x: 1175, y: 60, width: 100, height: 70 };
+
 
 
 // Global variables
@@ -105,13 +108,14 @@ function drawEverything(ctx) {
   song.draw(ctx);
 
   drawScore(ctx);
-
+  
+  endOfGame(ctx);
+  drawPlay(ctx);
   drawRules(ctx);
   drawBD(ctx);
   drawCC(ctx);
   drawxH(ctx);
   drawS(ctx);
-  drawPlay(ctx);
   drawReset(ctx);
   drawLevels(ctx);
 }
@@ -125,7 +129,35 @@ function updateEverything() {
 
 /*-------------------------- DRAWING ------------------------------*/
 
+function endOfGame(ctx) {
+  //Draw the hit zone for DEBUG
+  if (DEBUG) {
+    ctx.save();
+    ////Uncomment to draw image for debug
+    // let img = new Image();
+    // img.src = "/img/endOfSong.png";
+    // ctx.drawImage(img, 0, 0);
+    
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = "red";
+    ctx.strokeRect(670, 250, 120, 70);
+    ctx.strokeRect(END_DIM.x, END_DIM.y, END_DIM.width, END_DIM.height);
 
+    ctx.restore()
+  }
+  if (song.track.currentTime === song.track.duration ){
+  ctx.save();
+  let img = new Image();
+  img.src = "/img/endOfSong.png";
+  ctx.drawImage(img, 0, 0);
+  
+  ctx.font = "60px Arial "
+  ctx.fillStyle = "white"
+  ctx.fillText (score, 680,305)
+  ctx.restore();
+ }
+}
+  
 //---SCORE DRAW---
 function drawScore(ctx) {
   // TODO
@@ -244,7 +276,8 @@ function drawReset(ctx) {
 
   ctx.save();
   ctx.font = "40px Megan June, Arial";
-  ctx.fillStyle = "black";
+  ctx.globalAlpha = "0.7";
+  ctx.fillStyle = "white";
   if (song.track.currentTime !== 0 && !playPause) {
     ctx.fillText("RESET", RESET_DIM.x + 6, RESET_DIM.y + 35);
   }
@@ -283,12 +316,24 @@ function drawLevels(ctx) {
     img.src = "/img/Levels.png";
     ctx.drawImage(img, 0, 0);
   }
+
+  //FINISH THIS!!
+  ctx.save();
+  let levelText;
+  if (song.speed === 0.4) levelText= "1"
+  if (song.speed === 0.6) levelText= "2"
+  if (song.speed === 1) levelText= "3"
+
+  ctx.fillStyle = "rgb(255,255,255,0.7)"
+  ctx.font = "60px Megan June, Arial";
+  ctx.fillText(levelText,430,242)
+  ctx.restore();
 }
 
 /*-------------------------- KEY EVENTS ------------------------------*/
 // Listen for key events
 document.onkeydown = event => {
-  console.log(event.keyCode);
+  // console.log(event.keyCode);
 
   if (event.keyCode === 32) {
     BDhit = !BDhit;
@@ -344,10 +389,11 @@ document.onkeydown = event => {
   //OPEN RULES
   if (event.keyCode === 27 && rules) rules = !rules;
 
+
   //CHOOSE LEVELS
-  if (event.keyCode === 49 && level) song.speed = 0.3;
-  if (event.keyCode === 50 && level) song.speed = 0.6;
-  if (event.keyCode === 51 && level) song.speed = 1;
+  if (event.keyCode === 49 ) song.speed = 0.4;
+  if (event.keyCode === 50 ) song.speed = 0.6;
+  if (event.keyCode === 51 ) song.speed = 1;
   level = false;
 };
 
@@ -448,6 +494,18 @@ canvas.onclick = e => {
     console.log("Reset!");
     location.reload();
   }
+  // ---END OF GAME--
+  if (
+    END_DIM.x <= possitionX &&
+    possitionX <=END_DIM.x +END_DIM.width &&
+    END_DIM.y <= possitionY &&
+    possitionY <=END_DIM.y +END_DIM.height
+  ) {
+    console.log("Reset!");
+    location.reload();
+  }
+
+  //--- LEVEL ---- 
   if (
     LEVEL_DIM.x <= possitionX &&
     possitionX <= LEVEL_DIM.x + LEVEL_DIM.width &&
@@ -456,7 +514,6 @@ canvas.onclick = e => {
   ) {
     level = 3
     console.log("Level!");
-    // drawLevels();
   }
 };
 

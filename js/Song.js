@@ -67,15 +67,15 @@ class Song {
 
     // ----- DRAW END OF GAME------
 
-    if (this.track.currentTime === this.track.duration ) {
-      let img = new Image();
-      img.src = "/img/endOfSong.png";
-      ctx.drawImage(img, 0, 0);
+    // if (this.track.currentTime === this.track.duration ) {
+    //   let img = new Image();
+    //   img.src = "/img/endOfSong.png";
+    //   ctx.drawImage(img, 0, 0);
 
-      setTimeout(() => {
-        location.reload();
-      }, 15000);
-    }
+    //   setTimeout(() => {
+    //     location.reload();
+    //   }, 15000);
+    // }
 
     ctx.restore();
   }
