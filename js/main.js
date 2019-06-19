@@ -152,7 +152,7 @@ function drawBD(ctx) {
   //DRAW HIT
   if (BDhit) {
     let img = new Image();
-    img.src = "../img/onClickImages/BD.png";
+    img.src = "img/onClickImages/BD.png";
     ctx.drawImage(img, 830, 520);
     BDhit = !BDhit;
   }
@@ -171,7 +171,7 @@ function drawCC(ctx) {
   //DRAW HIT
   if (CChit) {
     let img = new Image();
-    img.src = "../img/onClickImages/CC.png";
+    img.src = "img/onClickImages/CC.png";
     ctx.drawImage(img, 890, 295);
     CChit = !CChit;
   }
@@ -189,7 +189,7 @@ function drawxH(ctx) {
   }
   if (xHhit) {
     let img = new Image();
-    img.src = "../img/onClickImages/xH.png";
+    img.src = "img/onClickImages/xH.png";
     ctx.drawImage(img, 345, 310);
     xHhit = !xHhit;
   }
@@ -207,7 +207,7 @@ function drawS(ctx) {
   }
   if (Shit) {
     let img = new Image();
-    img.src = "../img/onClickImages/S.png";
+    img.src = "img/onClickImages/S.png";
     ctx.drawImage(img, 580, 375);
     Shit = !Shit;
   }
