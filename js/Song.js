@@ -69,7 +69,7 @@ class Song {
 
     // if (this.track.currentTime === this.track.duration ) {
     //   let img = new Image();
-    //   img.src = "/img/endOfSong.png";
+    //   img.src = "img/endOfSong.png";
     //   ctx.drawImage(img, 0, 0);
 
     //   setTimeout(() => {
@@ -89,6 +89,7 @@ class Song {
       }
     }
   }
+
   play() {
     this.startTime = Date.now();
     if (!this.track.paused) {
@@ -112,6 +113,7 @@ class Song {
       this.pauseTime = Date.now();
     }
   }
+
   hit(note) {
     let feedbackColor;
     let feedbackY;

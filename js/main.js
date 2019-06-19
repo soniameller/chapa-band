@@ -13,12 +13,13 @@
 [X] If it is correct add 10, if it is wrong = -20
 [X] Change notes to ✨ if the hit is correct
 [X] Change song speed by levels
-
---------------------------TODO------------------------------
-IMPORTANT
 [X] What happens at the end of the song?
 [X] Exit the end of the song without timeout 
 [X] Print out the achievements in the end of the game
+
+--------------------------TODO------------------------------
+IMPORTANT
+[ ] I cant see the levels outside the live server
 
 NOT SO IMPORTANT
 
@@ -135,7 +136,7 @@ function endOfGame(ctx) {
     ctx.save();
     ////Uncomment to draw image for debug
     // let img = new Image();
-    // img.src = "/img/endOfSong.png";
+    // img.src = "img/endOfSong.png";
     // ctx.drawImage(img, 0, 0);
     
     ctx.lineWidth = 5;
@@ -148,7 +149,7 @@ function endOfGame(ctx) {
   if (song.track.currentTime === song.track.duration ){
   ctx.save();
   let img = new Image();
-  img.src = "/img/endOfSong.png";
+  img.src = "img/endOfSong.png";
   ctx.drawImage(img, 0, 0);
   
   ctx.font = "60px Arial "
@@ -313,7 +314,7 @@ function drawLevels(ctx) {
 
   if (level) {
     let img = new Image();
-    img.src = "/img/Levels.png";
+    img.src = "img/Levels.png";
     ctx.drawImage(img, 0, 0);
   }
 
