@@ -1,5 +1,5 @@
 class Song {
-  constructor(trackId, speed = 1) {
+  constructor(trackId, speed = 0.6) {
     this.notes = songs[trackId].notes;
     this.startTime = undefined;
     this.pauseTime = undefined;

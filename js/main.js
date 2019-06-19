@@ -16,6 +16,7 @@
 [X] What happens at the end of the song?
 [X] Exit the end of the song without timeout 
 [X] Print out the achievements in the end of the game
+[X] Change rule image
 
 --------------------------TODO------------------------------
 IMPORTANT
@@ -26,9 +27,8 @@ NOT SO IMPORTANT
 [ ] If I hit twice befor the song starts, everything gets inverted
 [ ] How to clean code: Take everything that could be outside
 [ ] Check why I can zoom in the canvas while I used the vh and vw units in CSS
-
+[ ] Add sound to the end of the song!
 [ ] Check fonts available in web (doesnt read my font online)
-[ ] Change rule image
 [ ] Full screen
 [ ] Complete song!
 [ ] The first hit doesnt draw the hit lines
@@ -511,11 +511,13 @@ canvas.onclick = e => {
     LEVEL_DIM.x <= possitionX &&
     possitionX <= LEVEL_DIM.x + LEVEL_DIM.width &&
     LEVEL_DIM.y <= possitionY &&
-    possitionY <= LEVEL_DIM.y + LEVEL_DIM.height
-  ) {
-    level = 3
-    console.log("Level!");
-  }
+    possitionY <= LEVEL_DIM.y + LEVEL_DIM.height 
+  ){
+    if(song.track.currentTime === 0) {
+      level = true
+      console.log("Level!");
+    } else location.reload();
+  } 
 };
 
 /*-------------------------- REORGANIZE ------------------------------*/
