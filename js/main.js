@@ -27,41 +27,44 @@ function doneList () {
 // [X] Use the arrows fot another way of playing 
 // [X] change the position of correct hit S
 }
-/*
---------------------------TODO------------------------------
-IMPORTANT
-[ ] Sounds dont work outside the live server but they work online 🤔
-[ ] If I hit twice before the song starts, everything gets fucked 🤯
-[ ] Check sound loop at the end of the song 
 
-NOT SO IMPORTANT
-
-[ ] Draw crowd
-[ ] Check the correct hit style
-[ ] Change hi-hat sound. I dont like it 🤮
-[ ] Draw long separation line between compases
-
-[ ] FULL OF BUGS 🐞 when the game is paused, you can still earn points
-[ ] How to clean code: Take everything that could be outside
-[ ] Check why I can zoom in the canvas while I used the vh and vw units in CSS
-
-BONUS
-[ ] Full screen
-[ ] The first hit doesnt draw the hit lines
-[ ] Change letters to real symbol in the drum sheet
-[ ] Missing intersection with the circle for click event
-[ ] Draw and move audience on rocks
-[ ] Make it work mobile
-[ ] More songs!
-[ ] Check that the way to make the drawing when the instrument is hit is repeted in the event listeners and in the click events
-[ ] What is chapaband.html inside my sounds?
-[ ] score -=1 if the note goes by without pressing
-*/
+function TODOList (){
+  /*
+  --------------------------TODO------------------------------
+  IMPORTANT
+  [ ] Sounds dont work outside the live server but they work online 🤔
+  [ ] If I hit twice before the song starts, everything gets fucked 🤯
+  [ ] Check sound loop at the end of the song 
+  
+  NOT SO IMPORTANT
+  
+  [ ] Draw crowd
+  [ ] Check the correct hit style
+  [ ] Change hi-hat sound. I dont like it 🤮
+  [ ] Draw long separation line between compases
+  
+  [ ] FULL OF BUGS 🐞 when the game is paused, you can still earn points
+  [ ] How to clean code: Take everything that could be outside
+  [ ] Check why I can zoom in the canvas while I used the vh and vw units in CSS
+  
+  BONUS
+  [ ] Full screen
+  [ ] The first hit doesnt draw the hit lines
+  [ ] Change letters to real symbol in the drum sheet
+  [ ] Missing intersection with the circle for click event
+  [ ] Draw and move audience on rocks
+  [ ] Make it work mobile
+  [ ] More songs!
+  [ ] Check that the way to make the drawing when the instrument is hit is repeted in the event listeners and in the click events
+  [ ] What is chapaband.html inside my sounds?
+  [ ] score -=1 if the note goes by without pressing
+  */
+}
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
-/*-------------------------- VARIABLES ------------------------------*/
+/*-------------------------- ⬇️ VARIABLES ⬇️ ------------------------------*/
 // Constants
 const DEBUG = false;
 // const DEBUG = true;
@@ -103,7 +106,7 @@ let xHsound = new Sound("audio/Sounds/xH.wav");
 let CCsound = new Sound("audio/Sounds/CC.wav");
 let crowdSound = new Audio("audio/Sounds/crowd.mp3");
 
-/*-------------------------- ANIMATION ------------------------------*/
+/*---------------------------- ⬇️ ANIMATION ⬇️-------------------------------------*/
 function animation() {
   updateEverything();
   drawEverything(ctx);
@@ -111,7 +114,7 @@ function animation() {
 }
 animation();
 
-/*-------------------------- DRAW EVERYTHING ------------------------------*/
+/*---------------------------⬇️ DRAW EVERYTHING ⬇️--------------------------------*/
 // It shouldn't modify any variable
 function drawEverything(ctx) {
   ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
@@ -134,14 +137,14 @@ function drawEverything(ctx) {
   drawLevels(ctx);
 }
 
-/*-------------------------- UPDATE EVERYTHING ------------------------------*/
+/*--------------------------⬇️ UPDATE EVERYTHING ⬇️----------------/--------------*/
 // It shouldn't draw on the canvas
 function updateEverything() {
   frame++;
   song.update();
 }
 
-/*-------------------------- DRAWING ------------------------------*/
+/*------------------------------⬇️ DRAWING ⬇️-------------------------------------*/
 
 //---- END OF SONG ----
 function endOfGame(ctx) {
@@ -387,7 +390,7 @@ function drawCrowd(ctx) {
   
 }
 
-/*-------------------------- KEY EVENTS ------------------------------*/
+/*-----------------------------------⬇️ KEY EVENTS ⬇️------------------------------*/
 // Listen for key events
 document.onkeydown = event => {
   console.log(event.keyCode);
@@ -468,7 +471,7 @@ document.onkeydown = event => {
   level = false;
 };
 
-/*-------------------------- CLICK EVENTS ------------------------------*/
+/*----------------------------------⬇️ CLICK EVENTS ⬇️ ------------------------------*/
 
 canvas.onclick = e => {
   //Thank you Seb 🙏
@@ -600,4 +603,4 @@ canvas.onclick = e => {
   }
 };
 
-/*-------------------------- REORGANIZE ------------------------------*/
+/*-------------------------------------⬇️ REORGANIZE  ⬇️------------------------------*/
