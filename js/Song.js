@@ -49,6 +49,7 @@ class Song {
         let y = 36;
         if (notes[i] === "BD") y = 140;
         if (notes[i] === "S") y = 78;
+        if (notes[i] === "CC") y = 25;
         ctx.fillText(notes[i], SPEED * (noteTime - time) + 154, y);
       }
     }
@@ -117,7 +118,7 @@ class Song {
     }
 
     if (note === "xH") feedbackY = 30;
-    else if (note === "S") feedbackY = 50;
+    else if (note === "S") feedbackY = 70;
     else if (note === "CC") feedbackY = 70;
     else feedbackY = 120;
 
