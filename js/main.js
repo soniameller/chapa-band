@@ -1,5 +1,5 @@
 /*
---------------------------DONE------------------------------
+--------------------------DONE 19/06/2019------------------------------
 [X] start coordinated notes and song 
 [X] Start playing the notes when I click on "PLAY"
 [X] Whats the problem song.html about?
@@ -17,33 +17,41 @@
 [X] Exit the end of the song without timeout 
 [X] Print out the achievements in the end of the game
 [X] Change rule image
+[X] I cant see the levels outside the live server
+[X] Check fonts available in web (doesnt read my font online)
+[X] Add sound to the end of the song!
+--------------------------DONE 20/06/2019------------------------------
 
 --------------------------TODO------------------------------
 IMPORTANT
-[ ] I cant see the levels outside the live server
+[ ] Sounds dont work outside the live server but they work online 🤔
+[ ] Check the correct hit style
+[ ] If I hit twice before the song starts, everything gets fucked 🤯
 
 NOT SO IMPORTANT
 
-[ ] If I hit twice befor the song starts, everything gets inverted
+[ ] FULL OF BUGS 🐞 when the game is paused, you can still earn points
+[ ] Use the arrows fot another way of playing 
 [ ] How to clean code: Take everything that could be outside
 [ ] Check why I can zoom in the canvas while I used the vh and vw units in CSS
-[ ] Add sound to the end of the song!
-[ ] Check fonts available in web (doesnt read my font online)
-[ ] Full screen
 [ ] Complete song!
-[ ] The first hit doesnt draw the hit lines
-[ ] Check that the way to make the drawing when the instrument is hit is repeted in the event listeners and in the click events
+[ ] Draw crowd
 [ ] Change hi-hat sound. I dont like it 🤮
+[ ] Draw buttons with button shape
+[ ] Change ending text according to the points
 
 BONUS
+[ ] Full screen
+[ ] The first hit doesnt draw the hit lines
 [ ] Change letters to real symbol in the drum sheet
-[ ] Missing intersection with the circle
-[ ] Use more keys to play the instruments
+[ ] Missing intersection with the circle for click event
 [ ] Draw and move audience on rocks
 [ ] Make it work mobile
 [ ] More songs!
 [ ] Load Maximun score over amout of notes played!
 [ ] score -=1 if the note goes by without pressing
+[ ] Check that the way to make the drawing when the instrument is hit is repeted in the event listeners and in the click events
+[ ] What is chapaband.html inside my sounds?
 */
 
 const canvas = document.querySelector("canvas");
@@ -90,6 +98,8 @@ let BDsound = new Sound("audio/Sounds/BD.wav");
 let Ssound = new Sound("audio/Sounds/S.wav");
 let xHsound = new Sound("audio/Sounds/xH.wav");
 let CCsound = new Sound("audio/Sounds/CC.wav");
+let crowdSound = new Audio("audio/Sounds/crowd.mp3");
+
 
 /*-------------------------- ANIMATION ------------------------------*/
 function animation() {
@@ -130,6 +140,8 @@ function updateEverything() {
 
 /*-------------------------- DRAWING ------------------------------*/
 
+
+//---- END OF SONG ----
 function endOfGame(ctx) {
   //Draw the hit zone for DEBUG
   if (DEBUG) {
@@ -147,16 +159,20 @@ function endOfGame(ctx) {
     ctx.restore()
   }
   if (song.track.currentTime === song.track.duration ){
-  ctx.save();
-  let img = new Image();
-  img.src = "img/endOfSong.png";
-  ctx.drawImage(img, 0, 0);
-  
-  ctx.font = "60px Arial "
-  ctx.fillStyle = "white"
-  ctx.fillText (score, 680,305)
-  ctx.restore();
- }
+    ctx.save();
+    let img = new Image();
+    img.src = "img/endOfSong.png";
+    ctx.drawImage(img, 0, 0);
+    
+    ctx.font = "60px  Megan June, Arial"
+    ctx.fillStyle = "white"
+    ctx.fillText (score, 700,305)
+    ctx.restore();
+    crowdSound.play();
+    if (crowdSound.currentTime > (crowdSound.duration-0.5)){ 
+      crowdSound.pause();
+    }
+  }
 }
   
 //---SCORE DRAW---
@@ -318,7 +334,6 @@ function drawLevels(ctx) {
     ctx.drawImage(img, 0, 0);
   }
 
-  //FINISH THIS!!
   ctx.save();
   let levelText;
   if (song.speed === 0.4) levelText= "1"
@@ -334,9 +349,12 @@ function drawLevels(ctx) {
 /*-------------------------- KEY EVENTS ------------------------------*/
 // Listen for key events
 document.onkeydown = event => {
-  // console.log(event.keyCode);
+  console.log(event.keyCode);
 
-  if (event.keyCode === 32) {
+  if (event.keyCode === 32 || 
+      event.keyCode === 86 || 
+      event.keyCode === 66
+      ) {
     BDhit = !BDhit;
     BDsound.play();
 
@@ -347,6 +365,7 @@ document.onkeydown = event => {
   if (event.keyCode === 68 || 
       event.keyCode === 70 || 
       event.keyCode === 67 ||
+      event.keyCode === 83 ||
       event.keyCode === 71 
       ){
     Shit = !Shit;
